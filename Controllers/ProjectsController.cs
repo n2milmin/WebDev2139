@@ -56,7 +56,7 @@ namespace Lab2.Controllers
 			{
 				return NotFound();
 			}
-			return View();
+			return View(project);
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
@@ -66,6 +66,7 @@ namespace Lab2.Controllers
             {
                 return NotFound();
             }
+
             if (ModelState.IsValid)
             {
                 try
