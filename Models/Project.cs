@@ -8,7 +8,7 @@ namespace Lab2.Models
 		public int ProjectId { get; set; }
 		[Required]
 		public string Name { get; set; }
-		public string Description { get; set; }
+		public string? Description { get; set; }
 		[DataType(DataType.Date)]
 		public DateTime StartDate { get; set;}
 		[DataType(DataType.Date)]
