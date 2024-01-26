@@ -15,11 +15,6 @@ namespace Lab2.Controllers
         [HttpGet]
 		public IActionResult Index()
 		{
-            /*var projects = new List<Project>()
-            { 
-                new Project { ProjectId = 1, Name = "Project 1", Description = "First Project" }, 
-                new Project { ProjectId = 2, Name = "Project 2", Description = "Second Project"}
-            };*/
 			return View(_db.Projects.ToList());
 		}
 
@@ -65,7 +60,7 @@ namespace Lab2.Controllers
 		}
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		/*public IActionResult Edit(int id, [Bind("ProjectId, Name, Description")] Project project)
+		public IActionResult Edit(int id, [Bind("ProjectId, Name, Description")] Project project)
         {
             if (id != project.ProjectId)
             {
@@ -87,8 +82,10 @@ namespace Lab2.Controllers
                     else
                         throw;
                 }
+                return RedirectToAction(nameof(Index));
             }
-        }*/
+            return View(project);
+        }
 
 		private bool ProjectExists(int id)
 		{
