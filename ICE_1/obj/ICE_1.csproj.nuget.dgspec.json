@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\ICE_1.csproj": {}
+    "c:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\ICE_1.csproj": {}
   },
   "projects": {
-    "C:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\ICE_1.csproj": {
+    "c:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\ICE_1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\ICE_1.csproj",
+        "projectUniqueName": "c:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\ICE_1.csproj",
         "projectName": "ICE_1",
-        "projectPath": "C:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\ICE_1.csproj",
+        "projectPath": "c:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\ICE_1.csproj",
         "packagesPath": "C:\\Users\\nicol\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\obj\\",
+        "outputPath": "c:\\Users\\nicol\\source\\repos\\WebDev2139\\WebDev2139\\ICE_1\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nicol\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -39,6 +39,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "C1.AspNetCore.Mvc": {
+              "target": "Package",
+              "version": "[6.0.20233.351, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
