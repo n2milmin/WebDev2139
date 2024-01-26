@@ -100,14 +100,14 @@ namespace Lab2.Controllers
 			{
 				return NotFound();
 			}
-			return View();
+			return View(project);
 		}
 
         [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int ProjectId)
         {
-            var project = _db.Projects.Find(id);
+            var project = _db.Projects.Find(ProjectId);
             if (project != null)
             {
                 _db.Projects.Remove(project);
