@@ -35,7 +35,25 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
+                <select asp-for="Status" class="form-control">
+                    <option value="">Select a Status</option>
+                    @{
+                        var statuses = new List<string> { "New", "In Progress", "Complete" };
+                        foreach (var status in statuses)
+                        {
+                            if (Model.Status == status)
+                            {
+                                <option value="@status" selected>@status</option>
+                            }
+                            else
+                            {
+                                <option value="@status">@status</option>
+                            }
+
+                        }
+                    }
+                </select>
+
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
