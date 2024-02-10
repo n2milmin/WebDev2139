@@ -14,5 +14,7 @@ namespace Lab2.Models
 		[DataType(DataType.Date)]
 		public DateTime EndDate { get; set;}
 		public string? Status {  get; set; }
+
+		public List<ProjectTask> Tasks { get; set;}
 	}
 }
