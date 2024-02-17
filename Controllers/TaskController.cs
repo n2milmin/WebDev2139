@@ -2,6 +2,7 @@
 using Lab2.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lab2.Controllers
 {
@@ -13,6 +14,7 @@ namespace Lab2.Controllers
         {
             _db = context;
         }
+            
         public IActionResult Index(int projectId)
         {
             var tasks = _db.ProjectTasks 
@@ -29,20 +31,21 @@ namespace Lab2.Controllers
                 .FirstOrDefault(t => t.ProjectTaskId == id);
             if (task == null)
             {
-                return NotFount();
+                return NotFound();
             }
             return View(task);
         }
         
         public IActionResult Create(int projectId)
         {
-            var task = _db.ProjectTasks
-                .Include(t => t.Project)
-                .FirstOrDefault(t => t.ProjectTaskId == id);
-            if (task == null)
+            var project = _db.Projects.Find(projectId);
+            if (project == null)
             {
-                return NotFount();
+                return NotFound();
             }
+
+            var task = new ProjectTask
+                {  ProjectId = projectId };
             return View(task);
         }
 
@@ -89,13 +92,16 @@ namespace Lab2.Controllers
                 _db.SaveChanges();
                 return RedirectToAction(nameof(Index), new { projectId = task.ProjectId });
             }
+
+            ViewBag.Projects = new SelectList(_db.Projects, "ProjectId", "Name", task.ProjectId);
+            return View(task);
         }
 
-        [HttpGet]
+        [HttpGet("Delete/{id:int}")]
         public IActionResult Delete(int id)
         {
             var task = _db.ProjectTasks
-                .Inclue(t => t.Project)
+                .Include(t => t.Project)
                 .FirstOrDefault(t => t.ProjectTaskId == id);
             if (task == null)
             {
@@ -103,7 +109,8 @@ namespace Lab2.Controllers
             }
             return View(task);
         }
-        [HttpPost, ActionName("DeleteConfirmed")]
+
+        [HttpPost("DeleteConfirmed/{id:int}")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed (int ProjectTaskId)
         {
@@ -116,5 +123,7 @@ namespace Lab2.Controllers
             }
             return NotFound();
         }
+
+        
     }
 }

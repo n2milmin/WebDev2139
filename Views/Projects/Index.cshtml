@@ -1,6 +1,9 @@
 ﻿@model List<Project>
 @{
 	ViewData["Title"] = "Projects";
+	// Search parameters
+	bool searchPerformed = ViewData["SearchPerformed"] as bool? ?? false;
+	string searchString = ViewData["SearchString"] as string;
 }
 
 <h2>Projects</h2>
@@ -26,6 +29,7 @@
 					<td>
 						<a asp-action="Details" asp-route-id="@project.ProjectId" class="btn btn-info">Details</a>
 						<a asp-action="Delete" asp-route-id="@project.ProjectId" class="btn btn-danger">Delete</a>
+						<a asp-controller="Task" asp-action="Index" asp-route-projectId="@project.ProjectId" class="btn btn-warning">View Tasks</a>
 					</td>
 				</tr>
 			}
@@ -34,7 +38,14 @@
 }
 else
 {
-	<p>No Projects</p>
+	if (searchPerformed)
+	{
+		<p>No projects name with name "@searchString".</p>
+	}
+	else
+	{
+			<p>No Projects</p>
+	}
 }
 
 
