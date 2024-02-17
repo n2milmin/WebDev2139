@@ -10,29 +10,25 @@
     @Html.HiddenFor(model => model.ProjectTaskId)
 
     <div class="form-group">
-        <label asp-for="Title" class="control-label"></label>
+        <label asp-for="Title" class="control-label">Title</label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
+        <label asp-for="Description" class="control-label">Description</label>
         <input asp-for="Description" class="form-control" />
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ProjectId" class="control-label"></label>
-        <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
+        <label asp-for="ProjectId" class="control-label">Project</label>
+        <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.Projects"></select>
     </div>
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-primary" />
-        <a asp-action="Index" asp-route-projectId="@Model.ProjectId" class="btn btn-secondary"
+        <a asp-action="Index" asp-route-projectId="@Model.ProjectId" class="btn btn-secondary">Back to List</a>
     </div>
 </form>
 
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{

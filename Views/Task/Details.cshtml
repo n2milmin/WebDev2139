@@ -1,9 +1,9 @@
 ﻿@model Lab2.Models.ProjectTask
 @{
-	ViewData["Title"] = "Details";
+	ViewData["Title"] = "Task Details";
 }
 
-<h1>Details</h1>
+<h1>Task Details</h1>
 
 <div>
 	<h4>ProjectTask</h4>
@@ -30,6 +30,6 @@
 	</dl>
 </div>
 <div>
-	<a asp-action="Edit" asp-route-id="@Model?.ProjectTaskId">Edit</a>
+	<a asp-action="Edit" asp-route-id="@Model?.ProjectTaskId" class="btn btn-primary">Edit</a>
 	<a asp-action="Index" asp-route-projectId="@Model.ProjectId" class="btn btn-secondary">Back to List</a>
 </div>

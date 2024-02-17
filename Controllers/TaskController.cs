@@ -35,7 +35,7 @@ namespace Lab2.Controllers
             }
             return View(task);
         }
-        
+        [HttpGet]
         public IActionResult Create(int projectId)
         {
             var project = _db.Projects.Find(projectId);
@@ -45,7 +45,9 @@ namespace Lab2.Controllers
             }
 
             var task = new ProjectTask
-                {  ProjectId = projectId };
+            {
+                ProjectId = projectId 
+            };
             return View(task);
         }
 
@@ -80,7 +82,7 @@ namespace Lab2.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("Title", "Description", "ProjectId")] ProjectTask task)
+        public IActionResult Edit(int id, [Bind("ProjectTaskId", "Title", "Description", "ProjectId")] ProjectTask task)
         {
             if (id != task.ProjectTaskId)
             {
@@ -97,7 +99,7 @@ namespace Lab2.Controllers
             return View(task);
         }
 
-        [HttpGet("Delete/{id:int}")]
+        [HttpGet] //("Delete/{id:int}")
         public IActionResult Delete(int id)
         {
             var task = _db.ProjectTasks
@@ -110,11 +112,11 @@ namespace Lab2.Controllers
             return View(task);
         }
 
-        [HttpPost("DeleteConfirmed/{id:int}")]
+        [HttpPost, ActionName("DeleteConfirmed")] //("DeleteConfirmed/{id:int}")
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed (int ProjectTaskId)
+        public IActionResult DeleteConfirmed (int projectTaskId)
         {
-            var task = _db.ProjectTasks.Find(ProjectTaskId);
+            var task = _db.ProjectTasks.Find(projectTaskId);
             if (task != null)
             {
                 _db.ProjectTasks.Remove(task);

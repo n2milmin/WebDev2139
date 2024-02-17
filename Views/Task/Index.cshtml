@@ -32,5 +32,5 @@
 	</tbody>
 </table>
 
-<a asp-action="Create" asp-route-projectId="@ViewBag.ProjectId" class="btn btn-primary">Create New Task</a>
-<a asp-action="Project" asp-action="Index" class="btn btn-secondary">Back to Projects</a>
+<a asp-controller="Task" asp-action="Create" asp-route-projectId="@ViewBag.ProjectId" class="btn btn-primary">Create New Task</a>
+<a asp-controller="Projects" asp-action="Index" class="btn btn-secondary">Back to Projects</a>

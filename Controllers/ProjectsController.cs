@@ -30,7 +30,7 @@ namespace Lab2.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create() 
         {
             
             return View();

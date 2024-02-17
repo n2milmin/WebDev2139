@@ -7,7 +7,7 @@ namespace Lab2.Models
 	{
 		public int ProjectId { get; set; }
 		[Required]
-		public string Name { get; set; }
+		public string? Name { get; set; }
 		public string? Description { get; set; }
 		[DataType(DataType.Date)]
 		public DateTime StartDate { get; set;}
@@ -15,6 +15,6 @@ namespace Lab2.Models
 		public DateTime EndDate { get; set;}
 		public string? Status {  get; set; }
 
-		public List<ProjectTask> Tasks { get; set;}
+		public List<ProjectTask>? Tasks { get; set;}
 	}
 }

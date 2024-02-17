@@ -3,7 +3,7 @@
 	ViewData["Title"] = "Projects";
 	// Search parameters
 	bool searchPerformed = ViewData["SearchPerformed"] as bool? ?? false;
-	string searchString = ViewData["SearchString"] as string;
+	//string searchString = ViewData["SearchString"] as string;
 }
 
 <h2>Projects</h2>
@@ -38,17 +38,17 @@
 }
 else
 {
-	if (searchPerformed)
-	{
-		<p>No projects name with name "@searchString".</p>
-	}
-	else
-	{
-			<p>No Projects</p>
-	}
+	//if (searchPerformed)
+	//{
+	//	<p>No projects name with name "@searchString".</p>
+	//}
+	//else
+	//{
+	<p>No Projects</p>
+	//}
 }
 
 
-<p>
-	<a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Create">Create Project</a>
-</p>
+<div>
+	<a class="btn btn-primary" asp-action="Create">Create Project</a>
+</div>
