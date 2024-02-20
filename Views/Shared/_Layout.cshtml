@@ -20,6 +20,17 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+
+                <!-- Search Form -->
+                <form class="d-flex" asp-controller="Home" asp-action="GeneralSearch" method="get">
+                    <input class="form-control" type="text" placeholder="Search" name="searchString" />
+                    <select class="form-control btn btnalert-secondary dropdown-toggle" name="searchType">
+                        <option value="Project">Projects</option>
+                        <option value="Tasks">Tasks</option>
+                    </select> 
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                                
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
                         <li class="nav-item">

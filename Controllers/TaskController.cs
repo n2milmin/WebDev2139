@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lab2.Controllers
 {
+    [Route("Task")]
     public class TaskController : Controller
     {
         private readonly AppDbContext _db;
@@ -14,7 +15,8 @@ namespace Lab2.Controllers
         {
             _db = context;
         }
-            
+
+        [HttpGet("Index/{projectId:int}")]
         public IActionResult Index(int projectId)
         {
             var tasks = _db.ProjectTasks 
@@ -23,7 +25,7 @@ namespace Lab2.Controllers
             ViewBag.ProjectId = projectId;
             return View(tasks);
         }
-        [HttpGet]
+        [HttpGet("Details/{id:int}")]
         public IActionResult Details(int id)
         {
             var task = _db.ProjectTasks
@@ -35,7 +37,7 @@ namespace Lab2.Controllers
             }
             return View(task);
         }
-        [HttpGet]
+        [HttpGet("Create/{projectId:int}")]
         public IActionResult Create(int projectId)
         {
             var project = _db.Projects.Find(projectId);
@@ -51,7 +53,7 @@ namespace Lab2.Controllers
             return View(task);
         }
 
-        [HttpPost]
+        [HttpPost("Create/{projectId:int}")]
         [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Title", "Description", "ProjectId")] ProjectTask task)
         {
@@ -66,7 +68,7 @@ namespace Lab2.Controllers
             return View(task);
         }
 
-        [HttpGet]
+        [HttpGet("Edit/{id:int}")]
         public IActionResult Edit(int id)
         {
             var task = _db.ProjectTasks
@@ -80,7 +82,7 @@ namespace Lab2.Controllers
             return View(task);
         }
 
-        [HttpPost]
+        [HttpPost("Edit/{id:int}")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, [Bind("ProjectTaskId", "Title", "Description", "ProjectId")] ProjectTask task)
         {
@@ -99,7 +101,7 @@ namespace Lab2.Controllers
             return View(task);
         }
 
-        [HttpGet] //("Delete/{id:int}")
+        [HttpGet("Delete/{id:int}")]
         public IActionResult Delete(int id)
         {
             var task = _db.ProjectTasks
@@ -112,7 +114,7 @@ namespace Lab2.Controllers
             return View(task);
         }
 
-        [HttpPost, ActionName("DeleteConfirmed")] //("DeleteConfirmed/{id:int}")
+        [HttpPost("DeleteConfirmed/{id:int}")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed (int projectTaskId)
         {
@@ -126,6 +128,39 @@ namespace Lab2.Controllers
             return NotFound();
         }
 
-        
+        [HttpGet("Search/{searchString?}")]
+        public async Task<IActionResult> Search(string searchString)
+        {
+            var projectsQuery = from p in _db.Projects
+                                select p;
+
+            bool searchPerformed = !String.IsNullOrEmpty(searchString);
+
+            if (searchPerformed)
+            {
+                projectsQuery = projectsQuery.Where(p => p.Name.Contains(searchString)
+                                               || p.Description.Contains(searchString));
+            }
+
+            var projects = await projectsQuery.ToListAsync();
+            ViewData["SearchPerformed"] = searchPerformed;
+            ViewData["SearchString"] = searchString;
+            return View("Index", projects); // Reuse the Index view to display results
+        }
+
+        [HttpGet("Search/{projectId:int}/{searchString?}")]
+        public async Task<IActionResult> Search(int projectId, string searchString)
+        {
+            var tasksQuery = _db.ProjectTasks.AsQueryable();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                tasksQuery = tasksQuery
+                    .Where(t => t.Title.Contains(searchString)
+                            || t.Description.Contains(searchString));
+            }
+            var tasks = await tasksQuery.ToListAsync();
+            ViewBag.ProjectId = projectId;
+            return View("Index", tasks);
+        }
     }
 }
