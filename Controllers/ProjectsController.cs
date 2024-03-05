@@ -78,7 +78,7 @@ namespace Lab2.Controllers
                 }
                 catch (DbUpdateConcurrencyException) 
                 {
-                    if (!ProjectExists(project.ProjectId))
+                    if (!await ProjectExists(project.ProjectId))
                     {
                         return NotFound(project);
                     }
