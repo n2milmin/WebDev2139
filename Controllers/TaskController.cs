@@ -17,20 +17,20 @@ namespace Lab2.Controllers
         }
 
         [HttpGet("Index/{projectId:int}")]
-        public IActionResult Index(int projectId)
+        public async Task<IActionResult> Index(int projectId)
         {
-            var tasks = _db.ProjectTasks 
+            var tasks = await _db.ProjectTasks 
                 .Where(task => task.ProjectId == projectId)
-                .ToList();
+                .ToListAsync();
             ViewBag.ProjectId = projectId;
             return View(tasks);
         }
         [HttpGet("Details/{id:int}")]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var task = _db.ProjectTasks
+            var task = await _db.ProjectTasks
                 .Include(t => t.Project)
-                .FirstOrDefault(t => t.ProjectTaskId == id);
+                .FirstOrDefaultAsync(t => t.ProjectTaskId == id);
             if (task == null)
             {
                 return NotFound();
@@ -38,9 +38,9 @@ namespace Lab2.Controllers
             return View(task);
         }
         [HttpGet("Create/{projectId:int}")]
-        public IActionResult Create(int projectId)
+        public async Task<IActionResult> Create(int projectId)
         {
-            var project = _db.Projects.Find(projectId);
+            var project = await _db.Projects.FindAsync(projectId);
             if (project == null)
             {
                 return NotFound();
@@ -55,12 +55,12 @@ namespace Lab2.Controllers
 
         [HttpPost("Create/{projectId:int}")]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Title", "Description", "ProjectId")] ProjectTask task)
+        public async Task<IActionResult> Create([Bind("Title", "Description", "ProjectId")] ProjectTask task)
         {
             if (ModelState.IsValid)
             {
                 _db.ProjectTasks.Add(task);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index), new {projectId = task.ProjectId});
             }
 
@@ -69,11 +69,11 @@ namespace Lab2.Controllers
         }
 
         [HttpGet("Edit/{id:int}")]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var task = _db.ProjectTasks
+            var task = await _db.ProjectTasks
                 .Include(t => t.Project)
-                .FirstOrDefault(t => t.ProjectTaskId == id);
+                .FirstOrDefaultAsync(t => t.ProjectTaskId == id);
             if (task == null)
             {
                 return NotFound();
@@ -84,7 +84,7 @@ namespace Lab2.Controllers
 
         [HttpPost("Edit/{id:int}")]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("ProjectTaskId", "Title", "Description", "ProjectId")] ProjectTask task)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectTaskId", "Title", "Description", "ProjectId")] ProjectTask task)
         {
             if (id != task.ProjectTaskId)
             {
@@ -93,7 +93,7 @@ namespace Lab2.Controllers
             if (ModelState.IsValid)
             {
                 _db.Update(task);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index), new { projectId = task.ProjectId });
             }
 
@@ -102,11 +102,11 @@ namespace Lab2.Controllers
         }
 
         [HttpGet("Delete/{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var task = _db.ProjectTasks
+            var task = await _db.ProjectTasks
                 .Include(t => t.Project)
-                .FirstOrDefault(t => t.ProjectTaskId == id);
+                .FirstOrDefaultAsync(t => t.ProjectTaskId == id);
             if (task == null)
             {
                 return NotFound();
@@ -116,13 +116,13 @@ namespace Lab2.Controllers
 
         [HttpPost("DeleteConfirmed/{id:int}")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed (int projectTaskId)
+        public async Task<IActionResult> DeleteConfirmed (int projectTaskId)
         {
-            var task = _db.ProjectTasks.Find(projectTaskId);
+            var task = await _db.ProjectTasks.FindAsync(projectTaskId);
             if (task != null)
             {
                 _db.ProjectTasks.Remove(task);
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index), new { projectId = task.ProjectId });
             }
             return NotFound();
