@@ -16,6 +16,7 @@
 				<td>ID</td>
 				<td>Name</td>
 				<td>Description</td>
+				<td>Summary</td>
 				<td>Actions</td>
 			</tr>
 		</thead>
@@ -27,7 +28,11 @@
 					<td>@project.Name</td>
 					<td>@project.Description</td>
 					<td>
+						@await Component.InvokeAsync("ProjectSummary", new {projectId = project.ProjectId})
+					</td>
+					<td>
 						<a asp-action="Details" asp-route-id="@project.ProjectId" class="btn btn-info">Details</a>
+						<a asp-action="Edit" asp-route-id="@project.ProjectId" class="btn btn-secondary">Edit</a>
 						<a asp-action="Delete" asp-route-id="@project.ProjectId" class="btn btn-danger">Delete</a>
 						<a asp-controller="Task" asp-action="Index" asp-route-projectId="@project.ProjectId" class="btn btn-warning">View Tasks</a>
 					</td>
@@ -50,5 +55,5 @@ else
 
 
 <div>
-	<a class="btn btn-primary" asp-controller="Project" asp-action="Create">Create Project</a>
+	<a class="btn btn-primary" asp-controller="Projects" asp-action="Create">Create Project</a>
 </div>

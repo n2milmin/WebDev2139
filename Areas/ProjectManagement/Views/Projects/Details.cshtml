@@ -1,4 +1,4 @@
-﻿@model Lab2.Models.Project
+﻿@model Project
 
 @{
     ViewData["Title"] = "Project Details";
@@ -47,6 +47,7 @@
     <a asp-action="Edit" asp-route-id="@Model?.ProjectId" class="btn btn-primary">Edit</a> |
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
+
 <div id="projectComments">
     <h3>Comments</h3>
     <div id="commentsList" class="comments-container">
@@ -61,7 +62,7 @@
     </form>
 </div>
 @section Scripts {
-    <script src="~/js/projectComments.js"></script>
+    <script src="/wwwroot/js/ProjectComments.js"></script>
     <script>
         $(document).ready(function () {
             initializeProjectComments(@Model.ProjectId);

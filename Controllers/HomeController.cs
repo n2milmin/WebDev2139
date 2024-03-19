@@ -23,22 +23,22 @@ namespace Lab2.Controllers
             return View();
         }
 
-		public IActionResult About()
-		{
-			return View();
-		}
+        public IActionResult About()
+        {
+            return View();
+        }
 
         [HttpGet]
         public IActionResult GeneralSearch(string searchType, string searchString)
         {
             if (searchType == "Projects")
             {
-                return RedirectToAction("Search", "Projects", new {searchString });
+                return RedirectToAction("Search", "Projects", new { searchString });
             }
             else if (searchType == "Tasks")
             {
                 int defaultProjectId = 1;
-                return RedirectToAction("Search", "Task", new {projectId = defaultProjectId, searchString});
+                return RedirectToAction("Search", "Task", new { projectId = defaultProjectId, searchString });
             }
             return RedirectToAction("Index", "Home");
         }
@@ -50,7 +50,7 @@ namespace Lab2.Controllers
             return View("Error");
         }
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

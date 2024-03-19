@@ -1,29 +1,31 @@
-﻿using Lab2.Data;
-using Lab2.Models;
+﻿using Lab2.Areas.ProjectManagement.Models;
+using Lab2.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lab2.Controllers
+namespace Lab2.Areas.ProjectManagement.Controllers
 {
-    [Route("Projects")]
-	public class ProjectsController : Controller
-	{
+    [Area("ProjectManagement")]
+    [Route("[area]/[controller]/[action]")]
+    public class ProjectsController : Controller
+    {
         private readonly AppDbContext _db;
         public ProjectsController(AppDbContext db)
         {
             _db = db;
         }
         [HttpGet]
-		public async Task<IActionResult> Index()
-		{
-			var project = await _db.Projects.ToListAsync();
-            return View(project);
-		}
+        public async Task<IActionResult> Index()
+        {
+            var project = await _db.Projects.ToListAsync();
 
-        [HttpGet("Index/{projectId:int}")]
+            return View(project);
+        }
+
+        [HttpGet("Details/{id:int}")]
         public async Task<IActionResult> Details(int id)
         {
-            var project = _db.Projects.FirstOrDefault(p => p.ProjectId == id);
+            var project = await _db.Projects.FirstOrDefaultAsync(p => p.ProjectId == id);
             if (project == null)
             {
                 return NotFound();
@@ -32,37 +34,38 @@ namespace Lab2.Controllers
         }
 
         [HttpGet("Create")]
-        public IActionResult Create() 
+        public IActionResult Create()
         {
-            
+
             return View();
         }
+
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Project project) 
+        public async Task<IActionResult> Create(Project project)
         {
-			if (ModelState.IsValid)
-			{
-				_db.Projects.Add(project);
+            if (ModelState.IsValid)
+            {
+                _db.Projects.Add(project);
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
-			}
+            }
             return View(project);
         }
 
-		[HttpGet("Edit/{id:int}")]
-		public async Task<IActionResult> Edit(int id)
-		{
+        [HttpGet("Edit/{id:int}")]
+        public async Task<IActionResult> Edit(int id)
+        {
             var project = await _db.Projects.FindAsync(id);
-			if (project == null)
-			{
-				return NotFound();
-			}
-			return View(project);
-		}
-		[HttpPost("Edit/{id:int}")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("ProjectId, Name, Description, StartDate, EndDate, Status")] Project project)
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
+        }
+        [HttpPost("Edit/{id:int}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectId, Name, Description, StartDate, EndDate, Status")] Project project)
         {
             if (id != project.ProjectId)
             {
@@ -76,7 +79,7 @@ namespace Lab2.Controllers
                     _db.Update(project);
                     await _db.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException) 
+                catch (DbUpdateConcurrencyException)
                 {
                     if (!await ProjectExists(project.ProjectId))
                     {
@@ -90,21 +93,21 @@ namespace Lab2.Controllers
             return View(project);
         }
 
-		private async Task<bool> ProjectExists(int id)
-		{
+        private async Task<bool> ProjectExists(int id)
+        {
             return await _db.Projects.AnyAsync(p => p.ProjectId == id);
-		}
+        }
 
         [HttpGet("Delete/{id:int}")]
-		public async Task<IActionResult> Delete(int id)
-		{
-			var project = await _db.Projects.FirstOrDefaultAsync(p => p.ProjectId == id);
-			if (project == null)
-			{
-				return NotFound();
-			}
-			return View(project);
-		}
+        public async Task<IActionResult> Delete(int id)
+        {
+            var project = await _db.Projects.FirstOrDefaultAsync(p => p.ProjectId == id);
+            if (project == null)
+            {
+                return NotFound();
+            }
+            return View(project);
+        }
 
         [HttpPost("DeleteConfirmed/{id:int}")]
         [ValidateAntiForgeryToken]
@@ -127,7 +130,7 @@ namespace Lab2.Controllers
             var projectsQuery = from p in _db.Projects
                                 select p;
 
-            bool searchPerformed = !String.IsNullOrEmpty(searchString);
+            bool searchPerformed = !string.IsNullOrEmpty(searchString);
 
             if (searchPerformed)
             {
@@ -145,7 +148,7 @@ namespace Lab2.Controllers
         public async Task<IActionResult> Search(int projectId, string searchString)
         {
             var tasksQuery = _db.ProjectTasks.AsQueryable();
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 tasksQuery = tasksQuery
                     .Where(t => t.Title.Contains(searchString)

@@ -1,17 +1,18 @@
-﻿using Lab2.Data;
-using Lab2.Models;
+﻿using Lab2.Areas.ProjectManagement.Models;
+using Lab2.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lab2.Controllers
+namespace Lab2.Areas.ProjectManagement.Controllers
 {
-    [Route("Task")]
-    public class TaskController : Controller
+	[Area("ProjectManagement")]
+	[Route("[area]/[controller]/[action]")]
+	public class TaskController : Controller
     {
         private readonly AppDbContext _db;
 
-        public TaskController(AppDbContext context) 
+        public TaskController(AppDbContext context)
         {
             _db = context;
         }
@@ -19,7 +20,7 @@ namespace Lab2.Controllers
         [HttpGet("Index/{projectId:int}")]
         public async Task<IActionResult> Index(int projectId)
         {
-            var tasks = await _db.ProjectTasks 
+            var tasks = await _db.ProjectTasks
                 .Where(task => task.ProjectId == projectId)
                 .ToListAsync();
             ViewBag.ProjectId = projectId;
@@ -48,7 +49,7 @@ namespace Lab2.Controllers
 
             var task = new ProjectTask
             {
-                ProjectId = projectId 
+                ProjectId = projectId
             };
             return View(task);
         }
@@ -61,7 +62,7 @@ namespace Lab2.Controllers
             {
                 _db.ProjectTasks.Add(task);
                 await _db.SaveChangesAsync();
-                return RedirectToAction(nameof(Index), new {projectId = task.ProjectId});
+                return RedirectToAction(nameof(Index), new { projectId = task.ProjectId });
             }
 
             ViewBag.Projects = new SelectList(_db.Projects, "ProjectId", "Name", task.ProjectId);
@@ -116,7 +117,7 @@ namespace Lab2.Controllers
 
         [HttpPost("DeleteConfirmed/{id:int}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed (int projectTaskId)
+        public async Task<IActionResult> DeleteConfirmed(int projectTaskId)
         {
             var task = await _db.ProjectTasks.FindAsync(projectTaskId);
             if (task != null)
@@ -134,7 +135,7 @@ namespace Lab2.Controllers
             var projectsQuery = from p in _db.Projects
                                 select p;
 
-            bool searchPerformed = !String.IsNullOrEmpty(searchString);
+            bool searchPerformed = !string.IsNullOrEmpty(searchString);
 
             if (searchPerformed)
             {
@@ -152,7 +153,7 @@ namespace Lab2.Controllers
         public async Task<IActionResult> Search(int projectId, string searchString)
         {
             var tasksQuery = _db.ProjectTasks.AsQueryable();
-            if (!String.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(searchString))
             {
                 tasksQuery = tasksQuery
                     .Where(t => t.Title.Contains(searchString)
