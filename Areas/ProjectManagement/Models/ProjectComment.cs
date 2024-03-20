@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Lab2.Models
+namespace Lab2.Areas.ProjectManagement.Models
 {
     public class ProjectComment
     {

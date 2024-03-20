@@ -33,10 +33,10 @@ $(document).ready(function() {
         };
 
         $.ajax({
-        url: '/ProjectManagement/ProjectComment/AddComment',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(formData),
+            url: '/ProjectManagement/ProjectComment/AddComment',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
             success: function (response) {
                 if (response.success) {
                     $('#projectComments textarea[name="Content"]').val(''); // Clear the textarea
