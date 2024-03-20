@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Lab2.Services;
+using Lab2.Areas.ProjectManagement.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultUI()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
 
 // ensures whenever an iemailsender is injected, an instance of EmailSender is provided
 builder.Services.AddSingleton<IEmailSender, EmailSender>();

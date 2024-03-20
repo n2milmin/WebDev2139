@@ -1,10 +1,12 @@
 ﻿using Lab2.Areas.ProjectManagement.Models;
 using Lab2.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lab2.Areas.ProjectManagement.Controllers
 {
+    [Authorize]
     [Area("ProjectManagement")]
     [Route("[area]/[controller]/[action]")]
     public class ProjectsController : Controller
@@ -14,7 +16,7 @@ namespace Lab2.Areas.ProjectManagement.Controllers
         {
             _db = db;
         }
-        [HttpGet]
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             var project = await _db.Projects.ToListAsync();
