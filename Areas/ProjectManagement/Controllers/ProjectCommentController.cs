@@ -1,31 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using Lab2.Data;
 using Lab2.Areas.ProjectManagement.Models;
 
 namespace Lab2.Areas.ProjectManagement.Controllers
 {
-    [Area("ProjectManageent")]
+    [Area("ProjectManagement")]
     [Route("[area]/[controller]/[action]")]
-    public class ProjectCommentsController : Controller
+    public class ProjectCommentController : Controller
     {
         private readonly AppDbContext _db;
 
-        public ProjectCommentsController(AppDbContext db)
+        public ProjectCommentController(AppDbContext db)
         {
             _db = db;
         }
 
-        // GET: ProjectManagement/ProjectComment/GetComments/{projectId}
         [HttpGet]
         public async Task<IActionResult> GetComments(int projectId)
         {
             var comments = await _db.ProjectComments
                                          .Where(c => c.ProjectId == projectId)
-                                         .OrderByDescending(c => c.CreatedDate)
+                                         .OrderByDescending(c => c.DatePosted)
                                          .ToListAsync();
 
             return Json(comments);
@@ -36,9 +32,10 @@ namespace Lab2.Areas.ProjectManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                comment.CreatedDate = DateTime.Now; // Set the current time as the posting time
+                comment.DatePosted = DateTime.Now; // Set the current time as the posting time
                 _db.ProjectComments.Add(comment);
                 await _db.SaveChangesAsync();
+
                 return Json(new { success = true, message = "Comment added successfully." });
             }
 

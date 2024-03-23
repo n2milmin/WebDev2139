@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lab2.Areas.ProjectManagement.Controllers
 {
-    [Authorize]
     [Area("ProjectManagement")]
     [Route("[area]/[controller]/[action]")]
     public class ProjectsController : Controller
@@ -16,6 +15,7 @@ namespace Lab2.Areas.ProjectManagement.Controllers
         {
             _db = db;
         }
+
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {

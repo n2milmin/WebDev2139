@@ -129,11 +129,11 @@ namespace Lab2.Areas.Identity.Pages.Account
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
                 MailAddress address = new MailAddress(Input.Email);
-                string userName = address.User;
+                string username = address.User;
 
                 user = new ApplicationUser
                 {
-                    UserName = userName,
+                    UserName = username,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     Email = Input.Email,

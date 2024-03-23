@@ -18,11 +18,14 @@ namespace Lab2.Areas.ProjectManagement.Controllers
         }
 
         [HttpGet("Index/{projectId:int}")]
-        public async Task<IActionResult> Index(int projectId)
+        public async Task<IActionResult> Index(int? projectId)
         {
-            var tasks = await _db.ProjectTasks
-                .Where(task => task.ProjectId == projectId)
-                .ToListAsync();
+            var tasksQuery = _db.ProjectTasks.AsQueryable();
+            if (projectId.HasValue)
+            {
+                tasksQuery = tasksQuery.Where(t => t.ProjectId == projectId);
+            }
+            var tasks = await tasksQuery.ToListAsync();
             ViewBag.ProjectId = projectId;
             return View(tasks);
         }
@@ -128,7 +131,7 @@ namespace Lab2.Areas.ProjectManagement.Controllers
             }
             return NotFound();
         }
-
+        /*
         [HttpGet("Search/{searchString?}")]
         public async Task<IActionResult> Search(string searchString)
         {
@@ -161,6 +164,26 @@ namespace Lab2.Areas.ProjectManagement.Controllers
             }
             var tasks = await tasksQuery.ToListAsync();
             ViewBag.ProjectId = projectId;
+            return View("Index", tasks);
+        }*/
+
+
+        [HttpGet("Search")]
+        public async Task<IActionResult> Search (int? projectId, string searchString)
+        {
+            var taskQ = _db.ProjectTasks.AsQueryable();
+            bool searchPerformed = !String.IsNullOrEmpty(searchString);
+
+            if (projectId.HasValue)
+            {
+                taskQ = taskQ.Where(t => t.Title.Contains(searchString) || t.Description.Contains(searchString));
+            }
+
+            var tasks = await taskQ.ToListAsync();
+
+            ViewBag.ProjectId = projectId;
+            ViewData["SearchPerformed"] = searchPerformed;
+            ViewData["SearchString"] = searchString;
             return View("Index", tasks);
         }
     }

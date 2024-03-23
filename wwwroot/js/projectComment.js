@@ -8,9 +8,9 @@ function loadComments(projectId) {
 
             var commentsHtml = '';
             for (var i = 0; i < data.length; i++) {
-                //   alert(data[i]);
-                commentsHtml += '<div class="comment">';
+                commentsHtml += '<div class="list-group-item">';
                 commentsHtml += '<p>' + data[i].content + '</p>';
+                commentsHtml += '<span>Posted on ' + new Date(data[i].datePosted).toLocaleString() + '<span>';
                 commentsHtml += '</div>';
             }
             $('#commentsList').html(commentsHtml);
@@ -18,15 +18,17 @@ function loadComments(projectId) {
     });
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
+
     var projectId = $('#projectComments input[name="ProjectId"]').val();
-    // alert(projectId)
-    // Call loadComments on page load
+    
     loadComments(projectId);
 
     // Submit event for addCommentForm
     $('#addCommentForm').submit(function (e) {
+
         e.preventDefault(); //this is very importamt
+
         var formData = {
             ProjectId: projectId,
             Content: $('#projectComments textarea[name="Content"]').val()
@@ -45,9 +47,9 @@ $(document).ready(function() {
                     alert(response.message);
                 }
             },
-        error: function (xhr, status, error) {
-            alert("Error: " + error);
-        }
+            error: function (xhr, status, error) {
+                alert("Error: " + error);
+            }
         });
     });
 });
