@@ -18,13 +18,23 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.S
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddRazorPages();
 
 // ensures whenever an iemailsender is injected, an instance of EmailSender is provided
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 var app = builder.Build();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Cookie settings
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+    options.LoginPath = "/Identity/Account/Login";
+    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+    options.SlidingExpiration = true;
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -46,7 +56,9 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.UseAuthentication();
+
 app.MapRazorPages();
+
 
 app.MapControllerRoute(
     name:"areas",
@@ -55,5 +67,18 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+/*using(var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityRole>> ();
+    var roles = new[] { "Admin", "Member" };
+    foreach(var role in roles)
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
+    }
+}*/
 
 app.Run();
