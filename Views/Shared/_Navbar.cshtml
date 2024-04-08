@@ -1,5 +1,7 @@
 ﻿@using Lab2.Areas.ProjectManagement.Models
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities;
+@inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     // Partial Nire - _Navbar.cshtml
@@ -40,6 +42,11 @@
                      <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage your account"><i class="fa fa-user-circle"></i> Profile</a>
                     </li>
+                    @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+                    {
+                        <img style="width: 40px; height:40px; object-fit:cover; border-radius:20px; margin-right: 2px;"
+                             src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture ))" />
+                    }
                     <li class="nav-item">
                         <form asp-area="Identity" asp-page="/Account/Logout" method="post">
                             <button type="submit" class="nav-link btn btn-link text-dark" style="cursor:pointer">Logout</button>
