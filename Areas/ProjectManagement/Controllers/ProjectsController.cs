@@ -1,5 +1,6 @@
 ﻿using Lab2.Areas.ProjectManagement.Models;
 using Lab2.Data;
+using Lab2.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,22 +12,41 @@ namespace Lab2.Areas.ProjectManagement.Controllers
     public class ProjectsController : Controller
     {
         private readonly AppDbContext _db;
-        public ProjectsController(AppDbContext db)
+        private readonly ILogger<ProjectsController> _logger;
+        private readonly ISessionService _sessionService;
+        public ProjectsController(AppDbContext db, ILogger<ProjectsController> logger, ISessionService sessionService)
         {
             _db = db;
+            _logger = logger;  
+            _sessionService = sessionService;
         }
 
         [HttpGet("")]
         public async Task<IActionResult> Index()
         {
-            var project = await _db.Projects.ToListAsync();
+            _logger.LogInformation("Calling project index action.");
+            try
+            {
+                var project = await _db.Projects.ToListAsync();
 
-            return View(project);
+                var value = _sessionService.GetSessionData<int?>("Visited") ?? 0;
+                _sessionService.SetSessionData("Visited", value + 1);
+                ViewBag.mysession = value + 1;
+
+                _logger.LogInformation(" HeLoO hElLo");
+                return View(project);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return View(null);
+            }
         }
 
         [HttpGet("Details/{id:int}")]
         public async Task<IActionResult> Details(int id)
         {
+            _logger.LogInformation("Calling project detail action.");
             var project = await _db.Projects.FirstOrDefaultAsync(p => p.ProjectId == id);
             if (project == null)
             {

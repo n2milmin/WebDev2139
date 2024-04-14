@@ -69,7 +69,6 @@ namespace Lab2.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
-            [EmailAddress]
             [Display(Name = "Email/Username")]
             public string Email { get; set; }
 
@@ -117,7 +116,7 @@ namespace Lab2.Areas.Identity.Pages.Account
                 var userName = Input.Email;
                 if (IsValidEmail(Input.Email))
                 {
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    var user = await _userManager.FindByEmailAsync(userName);
                     if (user != null)
                     {
                         userName = user.UserName;

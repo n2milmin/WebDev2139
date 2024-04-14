@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.UI.Services;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-// API Key - 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
+
 namespace Lab2.Services
 {
     public class EmailSender : IEmailSender

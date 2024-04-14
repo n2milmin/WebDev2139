@@ -123,12 +123,15 @@ namespace Lab2.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                //var user = CreateUser();
+                var user = CreateUser();
 
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                
                 MailAddress address = new MailAddress(Input.Email);
                 string username = address.User;
 
-                var user = new ApplicationUser
+                user = new ApplicationUser
                 {
                     UserName = username,
                     FirstName = Input.FirstName,
@@ -136,13 +139,14 @@ namespace Lab2.Areas.Identity.Pages.Account
                     Email = Input.Email,
                 };
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    Console.WriteLine("------------------------------------------create user -------------------------");
                     _logger.LogInformation("User created a new account with password.");
+
+                    await _userManager.AddToRoleAsync(user, Enum.Roles.Basic.ToString());
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -155,7 +159,7 @@ namespace Lab2.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    Console.WriteLine("SENT EMAIK -------------------------------------------------------------------------------");
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email /*, returnUrl = returnUrl */ });
@@ -173,6 +177,7 @@ namespace Lab2.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            Console.WriteLine("Failed Register --------------------------------------------------------------------------");
             return Page();
         }
 

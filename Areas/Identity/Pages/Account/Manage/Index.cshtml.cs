@@ -36,8 +36,12 @@ namespace Lab2.Areas.Identity.Pages.Account.Manage
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        [TempData]
+        [TempData] 
         public string StatusMessage { get; set; }
+
+
+        [TempData]
+        public string UserNameChangeLimitMessage { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -56,17 +60,22 @@ namespace Lab2.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Display(Name = "Userame")]
+            public string UserName { get; set; }
+
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
-            [Display(Name = "First Name")]
-            public string FirstName { get; set; }
-            [Display(Name = "Last Name")]
-            public string LastName { get; set; }
-            [Display(Name = "Userame")]
-            public string UserName { get; set; }
+
             [Display(Name = "Profile Picture")]
             public byte[] ProfilePicture { get; set; }
+
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -81,12 +90,14 @@ namespace Lab2.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber,
                 UserName = userName,
                 FirstName = firstName,
                 LastName = lastName,
-                ProfilePicture = profilePicture
+                PhoneNumber = phoneNumber,
+                ProfilePicture = profilePicture,
             };
+
+            UserNameChangeLimitMessage = $"You can change your username {user.UsernameChangeLimit} more times";
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -115,6 +126,18 @@ namespace Lab2.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
+            if (Input.FirstName != user.FirstName)
+            {
+                user.FirstName = Input.FirstName;
+                await _userManager.UpdateAsync(user);
+            }
+
+            if (Input.LastName != user.LastName)
+            {
+                user.LastName = Input.LastName;
+                await _userManager.UpdateAsync(user);
+            }
+
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
@@ -131,9 +154,18 @@ namespace Lab2.Areas.Identity.Pages.Account.Manage
                 if (Input.UserName != user.UserName)
                 {
                     var userNameExists = await _userManager.FindByNameAsync(Input.UserName);
+                    
                     if (userNameExists != null)
                     {
                         StatusMessage = "Error: username already taken. Please choose a different username.";
+                        return RedirectToPage();
+                    }
+
+                    var setUserName = await _userManager.SetUserNameAsync(user, Input.UserName);
+
+                    if (userNameExists != null)
+                    {
+                        StatusMessage = "Unexpected error when trying to set user name";
                         return RedirectToPage();
                     }
                     else
@@ -142,19 +174,9 @@ namespace Lab2.Areas.Identity.Pages.Account.Manage
                         user.UsernameChangeLimit -= 1;
                         await _userManager.UpdateAsync(user);
                     }
+
+                    UserNameChangeLimitMessage = $"You can change your username {user.UsernameChangeLimit} more times";
                 }
-            }
-
-            if (Input.FirstName != user.FirstName)
-            {
-                user.FirstName = Input.FirstName;
-                await _userManager.UpdateAsync(user);
-            }
-
-            if (Input.LastName != user.LastName)
-            {
-                user.LastName = Input.LastName;
-                await _userManager.UpdateAsync(user);
             }
 
             if (Request.Form.Files.Count > 0)

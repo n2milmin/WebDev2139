@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.WebUtilities;
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
+@using Lab2.Enum
 @{
     // Partial Nire - _Navbar.cshtml
 }
@@ -14,16 +15,6 @@
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <!-- Search Form -->
-        <form class="d-flex" asp-controller="Home" asp-action="GeneralSearch" method="get">
-            <input class="form-control" type="text" placeholder="Search" name="searchString" />
-            <select class="form-control btn btnalert-secondary dropdown-toggle" name="searchType">
-                <option value="Project">Projects</option>
-                <option value="Tasks">Tasks</option>
-            </select>
-            <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
 
         <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">        
             <ul class="navbar-nav flex-grow-1 justify-content-end">
@@ -39,19 +30,33 @@
 
                 @if (SignInManager.IsSignedIn(User))
                 {
-                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage your account"><i class="fa fa-user-circle"></i> Profile</a>
-                    </li>
-                    @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
-                    {
-                        <img style="width: 40px; height:40px; object-fit:cover; border-radius:20px; margin-right: 2px;"
-                             src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture ))" />
-                    }
+                     <li class="nav-item d-flex align-items-ceter">
+                        @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
+                        {
+                            <img style="width: 40px; height:40px; object-fit:cover; border-radius:20px; margin-right: 2px;"
+                                 src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture ))" />
+                        }
+                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" 
+                                title="Manage your account">Hello @User.Identity?.Name!</a>
+                    </li>                    
                     <li class="nav-item">
                         <form asp-area="Identity" asp-page="/Account/Logout" method="post">
                             <button type="submit" class="nav-link btn btn-link text-dark" style="cursor:pointer">Logout</button>
                         </form>
                     </li>
+                    @if (User.IsInRole(Roles.Admin.ToString()) || User.IsInRole(Roles.SuperAdmin.ToString()))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="/" asp-controller="/RoleManager">
+                                <i class="fa fa-sign-in-alt"></i> Role Manager
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="/" asp-controller="/UserRoles">
+                                <i class="fa fa-sign-in-alt"></i> User Roles
+                            </a>
+                        </li>
+                    }
                 }
                 else
                 {
@@ -63,6 +68,20 @@
                             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register"><i class="fa fa-user-plus"></i> Register</a>
                     </li>
                 }
+
+
+
+                <li>
+                    <!-- Search Form -->
+                    <form class="d-flex" asp-controller="/" asp-action="GeneralSearch" method="get">
+                        <input class="form-control" type="text" placeholder="Search" name="searchString" />
+                        <select class="form-control btn btn-primary dropdown-toggle" name="searchType">
+                            <option value="Project">Projects</option>
+                            <option value="Tasks">Tasks</option>
+                        </select>
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </div>

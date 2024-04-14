@@ -1,4 +1,5 @@
 using Lab2.Models;
+using Lab2.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,14 +8,22 @@ namespace Lab2.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ISessionService _sessionService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ISessionService session)
         {
             _logger = logger;
+            _sessionService = session;
         }
 
         public IActionResult Index()
         {
+            const string sessionKey = "VisitCount";
+            int visitCount = _sessionService.GetSessionData<int?>(sessionKey) ?? 0;
+            _sessionService.SetSessionData(sessionKey, visitCount + 1);
+
+            ViewBag.visitCount = visitCount;
+
             return View();
         }
 
